@@ -1,10 +1,9 @@
 const { MongoClient } = require('mongodb');
 const logger = require('../../utils/logger');
 
-const mongoUri = process.env.MONGO_URI;
-
 let client;
-const connection = (() => {
+const connection = (options) => {
+  const { mongoUri } = options;
   if (client) {
     return client;
   }
@@ -17,11 +16,14 @@ const connection = (() => {
     }
   });
   return client;
-})();
+};
 
-const mongoMiddleware = () => (ctx, next) => {
-  ctx.db = connection;
-  next();
+const mongoMiddleware = (options) => {
+  connection(options);
+  return (ctx, next) => {
+    ctx.db = connection(options);
+    next();
+  };
 };
 
 module.exports = mongoMiddleware;

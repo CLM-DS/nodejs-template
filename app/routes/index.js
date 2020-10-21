@@ -25,5 +25,4 @@ const useRoutes = (args = {}) => {
 
 module.exports = {
   useRoutes,
-  statusRoute,
 };
