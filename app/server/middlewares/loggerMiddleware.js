@@ -1,8 +1,12 @@
 const logger = require('../../utils/logger');
 
-const loggerMiddleware = () => (ctx, next) => {
+/**
+ * Added log to context
+ * @returns {(ctx: import('.').ContextStd, next: import('koa').Next) => import('koa')}
+ */
+const loggerMiddleware = () => async (ctx, next) => {
   ctx.log = logger;
-  next();
+  await next();
   return ctx;
 };
 

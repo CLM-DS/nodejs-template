@@ -3,7 +3,16 @@ const { useRoutes } = require('../routes');
 const { useMiddleware } = require('./middlewares');
 const logger = require('../utils/logger');
 
+/**
+ * @type {import('koa')}
+ */
 let app;
+
+/**
+ *
+ * @param {import('../config').Config} options
+ * @returns {import('koa')}
+ */
 const startServer = (options = {}) => {
   logger.info('Server Initialize');
   app = new Koa();
@@ -26,6 +35,9 @@ const startServer = (options = {}) => {
   return app;
 };
 
+/**
+ * Stop application active
+ */
 const stopServer = () => {
   app.removeAllListener();
 };

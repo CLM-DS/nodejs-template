@@ -1,8 +1,13 @@
 const config = require('../../config');
 
-const configMiddleware = () => (ctx, next) => {
+/**
+ * Added Config to context
+ * @returns {(ctx: import('.').ContextStd, next: import('koa').Next) => import('koa')}
+ */
+const configMiddleware = () => async (ctx, next) => {
   ctx.config = config;
-  next();
+  await next();
+  return ctx;
 };
 
 module.exports = configMiddleware;

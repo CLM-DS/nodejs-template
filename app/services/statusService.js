@@ -1,0 +1,52 @@
+const { httpStatus, serverStatus } = require('../constants');
+
+/**
+ * Verity ctx
+ * @param {import('../server/middlewares').ContextStd} ctx
+ * @returns {('UP' | undefined)}
+ */
+const checkCtx = (ctx) => {
+  if (ctx.log && ctx.db) {
+    return serverStatus.UP;
+  }
+  return undefined;
+};
+
+/**
+ * ctx check correct
+ * @param {import('../server/middlewares').ContextStd} ctx
+ * @returns {import('../server/middlewares').ContextStd}
+ */
+const healthy = (ctx) => {
+  ctx.log.debug('Healthy Request');
+  const status = checkCtx(ctx);
+  if (!status) {
+    ctx.status = httpStatus.statusCodes.SERVICE_UNAVAILABLE;
+  }
+  ctx.body = {
+    status: status || serverStatus.DOWN,
+  };
+  return ctx;
+};
+
+/**
+ * Check database and dependency load correct
+ * @param {import('../server/middlewares').ContextStd} ctx
+ * @returns {import('../server/middlewares').ContextStd}
+ */
+const alive = (ctx) => {
+  const { db } = ctx;
+  ctx.log.debug('Alive Request');
+  if (db && db.isConnected()) {
+    ctx.body = { status: 'UP' };
+  } else {
+    ctx.status = httpStatus.statusCodes.SERVICE_UNAVAILABLE;
+    ctx.body = { status: 'DOWN' };
+  }
+  return ctx;
+};
+
+module.exports = {
+  alive,
+  healthy,
+};

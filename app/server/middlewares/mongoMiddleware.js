@@ -1,28 +1,16 @@
-const { MongoClient } = require('mongodb');
-const logger = require('../../utils/logger');
+const { connect } = require('../../utils/wrapperDB');
 
-let client;
-const connection = (options) => {
-  const { mongoUri } = options;
-  if (client) {
-    return client;
-  }
-  client = new MongoClient(mongoUri, { useUnifiedTopology: true });
-  client.connect((resp) => {
-    if (resp.message) {
-      logger.error(resp);
-    } else {
-      logger.success('DB Connection Success');
-    }
-  });
-  return client;
-};
-
+/**
+ * Added mongo client
+ * @param {import('../../config').Config} options
+ * @returns {(ctx: import('.').ContextStd, next: import('koa').Next) => import('koa')}
+ */
 const mongoMiddleware = (options) => {
-  connection(options);
-  return (ctx, next) => {
-    ctx.db = connection(options);
-    next();
+  connect(options);
+  return async (ctx, next) => {
+    ctx.db = connect(options);
+    await next();
+    return ctx;
   };
 };
 
