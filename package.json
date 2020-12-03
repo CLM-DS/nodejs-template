@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --collectCoverage --detectOpenHandles --runInBand --forceExit",
     "start": "node app",
+    "dev": "yarn start --quiet | pino-pretty -c -l -t",
     "lint": "eslint app tests"
   },
   "author": "Yanny Hernández <yhernandez@clmconsultores.com>",

@@ -27,6 +27,7 @@ const errorMiddleware = (app) => {
       ctx.status = statusCodes.INTERNAL_SERVER_ERROR;
       ctx.app.emit('error', err, ctx);
     }
+    return ctx;
   };
 };
 

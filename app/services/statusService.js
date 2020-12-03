@@ -18,10 +18,11 @@ const checkCtx = (ctx) => {
  * @returns {import('../server/middlewares').ContextStd}
  */
 const healthy = (ctx) => {
-  ctx.log.debug('Healthy Request');
   const status = checkCtx(ctx);
   if (!status) {
     ctx.status = httpStatus.statusCodes.SERVICE_UNAVAILABLE;
+  } else {
+    ctx.status = httpStatus.statusCodes.OK;
   }
   ctx.body = {
     status: status || serverStatus.DOWN,
@@ -36,9 +37,9 @@ const healthy = (ctx) => {
  */
 const alive = (ctx) => {
   const { db } = ctx;
-  ctx.log.debug('Alive Request');
   if (db && db.isConnected()) {
     ctx.body = { status: 'UP' };
+    ctx.status = httpStatus.statusCodes.OK;
   } else {
     ctx.status = httpStatus.statusCodes.SERVICE_UNAVAILABLE;
     ctx.body = { status: 'DOWN' };
