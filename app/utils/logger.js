@@ -11,7 +11,6 @@ const options = {
   level: process.env.LOG_LEVEL || (env === 'production' ? 'info' : 'debug'),
   customLevels: { healthy: 0 },
   redact: [],
-  prettyPrint: { colorize: true, translateTime: true },
 };
 
 const logger = Pino(options);

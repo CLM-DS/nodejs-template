@@ -33,6 +33,11 @@ const evaluateSchemes = (schemas, ctx) => {
     }
     const { property, scheme } = item;
     const data = getProperty(property, ctx);
+    if (!data) {
+      return {
+        message: 'Data not found',
+      };
+    }
     const { error } = scheme.validate(data);
     if (error) {
       return error;
@@ -53,14 +58,12 @@ const useValidation = (schemas, handler) => (ctx) => {
   if (!err) {
     return handler(ctx);
   }
-  return () => {
-    ctx.status = statusCodes.BAD_REQUEST;
-    ctx.body = err;
-    ctx.log.warn(err, 'Validation fail');
-    return ctx;
-  };
+  ctx.status = statusCodes.BAD_REQUEST;
+  ctx.body = err;
+  ctx.log.warn(err, 'Validation fail');
+  return ctx;
 };
 
-export default {
+module.exports = {
   useValidation,
 };

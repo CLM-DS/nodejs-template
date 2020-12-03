@@ -38,8 +38,8 @@ const connect = (options) => {
  * @param {import('mongodb').FilterQuery} query
  * @returns {*}
  */
-const findOne = async (collection, query = {}) => {
-  const database = await client.db(dataSource);
+const findOne = (collection, query = {}) => {
+  const database = client.db(dataSource);
   return database.collection(collection).findOne(query);
 };
 
@@ -49,8 +49,8 @@ const findOne = async (collection, query = {}) => {
  * @param {import('mongodb').FilterQuery} query
  * @returns {[*]}
  */
-const find = async (collection, query = {}) => {
-  const database = await client.db(dataSource);
+const find = (collection, query = {}) => {
+  const database = client.db(dataSource);
   return database.collection(collection).find(query).toArray();
 };
 
@@ -60,8 +60,8 @@ const find = async (collection, query = {}) => {
  * @param {*} data
  * @returns {import('mongodb').InsertOneWriteOpResult}
  */
-const create = async (collection, data) => {
-  const database = await client.db(dataSource);
+const create = (collection, data) => {
+  const database = client.db(dataSource);
   return database.collection(collection).insertOne(data);
 };
 
