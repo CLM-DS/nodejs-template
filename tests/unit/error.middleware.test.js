@@ -1,17 +1,19 @@
-jest.mock('koa');
-const Koa = require('koa');
 const { statusCodes } = require('../../app/constants/httpStatus');
 const errorMiddleware = require('../../app/server/middlewares/errorMiddleware');
 
 describe('Test Cases: ErrorMiddleware', () => {
   it('Test Case Call', async () => {
-    const app = new Koa();
+    const ctx = {
+      request: {},
+    };
+    const app = {
+      on: jest.fn((_, callback) => callback({}, ctx)),
+      emit: jest.fn(),
+    };
     const handlerError = () => {
       throw new Error('Mock Error');
     };
-    const ctx = {
-      app,
-    };
+    ctx.app = app;
     try {
       await errorMiddleware(app)(ctx, handlerError);
     } catch (error) {
