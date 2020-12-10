@@ -1,10 +1,10 @@
 /**
  * Added Config to context
- * @param {import('../../utils/wrapperBroker')} broker
+ * @param {import('../../utils/broker').PoolBroker} pool
  * @returns {(ctx: import('.').ContextStd, next: import('koa').Next) => import('koa')}
  */
-const brokerMiddleware = (broker) => async (ctx, next) => {
-  ctx.config = broker;
+const brokerMiddleware = (pool) => async (ctx, next) => {
+  ctx.pool = pool;
   await next();
   return ctx;
 };

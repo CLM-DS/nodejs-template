@@ -1,23 +1,43 @@
-const broker = require('../utils/broker');
+const { createBroker, createPool } = require('../utils/broker');
 
-const buildListener = (pool) => {
-
+/**
+ *
+ * @param {import('../utils/broker').PoolBroker} pool
+ */
+const buildListener = async (pool) => {
+  const broker = pool.getBroker('kafka');
+  const listenerConfig = {
+    topic: 'topid-dummy',
+    onMessage: (message) => {
+      console.log(message);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  };
+  await broker.consumer.addListener(listenerConfig);
 };
 
-const createBrokers = (pool, args) => {
-  pool.addBroker('kafka', broker.createBroker(args.broker.kafka));
-  pool.addBroker('pubsub', broker.createBroker(args.broker.pubsub));
-  pool.addBroker('servicebus', broker.createBroker(args.broker.pubsub));
-}
+const createBrokers = (options) => {
+  const pool = createPool();
+  pool.addBroker('kafka', createBroker(options.brokerConfig.kafka));
+  return pool;
+};
+
 /**
  * Configure all middleware to application
  * @param {*} args
+ * @param {*} onComplete
  * @returns {*}
  */
 const useListeners = (args = {}) => {
-  if (args.broker) {
-    const pool = broker.createPool();
-    buildListener();
+  const { options, logger } = args;
+  if (options && options.brokerConfig) {
+    const pool = createBrokers(args.options);
+    buildListener(pool).then().catch((err) => {
+      logger.error(err);
+      pool.setError(err);
+    });
     return pool;
   }
   return undefined;

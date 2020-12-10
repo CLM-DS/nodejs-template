@@ -21,15 +21,16 @@ const startServer = (options = {}) => {
   // create connection to database
   const connection = connect(options);
   // create connection to broker and listener message
-  const broker = useListeners({
+  const pool = useListeners({
     options,
     db: connection,
+    logger,
   });
   // load middleware to app
   useMiddleware({
     options,
     app,
-    broker,
+    pool,
     db: connection,
   });
   logger.info('Server Middleware Loaded');

@@ -9,7 +9,7 @@ const brokerMiddleware = require('./brokerMiddleware');
  * @typedef {Object} Argument
  * @property {import('koa')} app
  * @property {import('../../config').Config} options
- * @property {import('../../utils/wrapperBroker')} broker
+ * @property {import('../../utils/broker').PoolBroker} pool
  * @property {import('mongodb').MongoClient} db
  */
 
@@ -18,7 +18,7 @@ const brokerMiddleware = require('./brokerMiddleware');
  * @property {import('../../config').Config} config
  * @property {import('pino').Logger} log
  * @property {import('mongodb').MongoClient} db
- * @property {import('../../utils/wrapperBroker')} broker
+ * @property {import('../../utils/broker').PoolBroker} pool
  */
 
 /**
@@ -34,7 +34,7 @@ const useMiddleware = (args = {}) => {
   const {
     app,
     options,
-    broker,
+    pool,
     db,
   } = args;
   // errorMiddleware must not move, this must be the first middleware to be used
@@ -45,7 +45,7 @@ const useMiddleware = (args = {}) => {
   // added client mongo to middleware
   app.use(mongoMiddleware(db));
   // added instance to managed broker
-  app.use(brokerMiddleware(broker));
+  app.use(brokerMiddleware(pool));
   return app;
 };
 

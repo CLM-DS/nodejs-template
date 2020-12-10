@@ -6,7 +6,7 @@ const { httpStatus, serverStatus } = require('../constants');
  * @returns {('UP' | undefined)}
  */
 const checkCtx = (ctx) => {
-  if (ctx.log && ctx.db) {
+  if (ctx.log && ctx.db && ctx.pool) {
     return serverStatus.UP;
   }
   return undefined;
@@ -36,8 +36,8 @@ const healthy = (ctx) => {
  * @returns {import('../server/middlewares').ContextStd}
  */
 const alive = (ctx) => {
-  const { db } = ctx;
-  if (db && db.isConnected()) {
+  const { db, pool } = ctx;
+  if (db && db.isConnected() && !pool.haveError()) {
     ctx.body = { status: 'UP' };
     ctx.status = httpStatus.statusCodes.OK;
   } else {

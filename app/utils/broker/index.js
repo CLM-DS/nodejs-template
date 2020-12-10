@@ -20,7 +20,7 @@ const { createConsumer } = require('./consumer');
 /**
  * @param {BrokerPublisherOption} brokerOptions
  */
-const createBroker = () => (brokerOptions) => {
+const createBroker = (brokerOptions) => {
   /**
    * @type {(ServiceBusClient|Kafka|PubSub)}
    */
@@ -30,7 +30,7 @@ const createBroker = () => (brokerOptions) => {
    * create client kafak
    * @param {KafkaOption} options
    */
-  const createKafka = (options) => new Kafka(options.config);
+  const createKafka = (options) => new Kafka(options);
 
   const createPubSub = () => new PubSub();
 
@@ -41,13 +41,13 @@ const createBroker = () => (brokerOptions) => {
    * @param {BrokerPublisherOption} options
    * @returns {(import('kafkajs').Producer)}
    */
-  const initBroker = (options) => {
-    switch (options.type) {
+  const initBroker = () => {
+    switch (brokerOptions.type) {
       case 'kafka':
-        brokerClient = createKafka(options.kafkaOption);
+        brokerClient = createKafka(brokerOptions.kafkaOption);
         break;
       case 'servicebus':
-        brokerClient = createServiceBus(options.serviceBusStrCnn);
+        brokerClient = createServiceBus(brokerOptions.serviceBusStrCnn);
         break;
       case 'pubsub':
         brokerClient = createPubSub();
@@ -79,20 +79,55 @@ const createBroker = () => (brokerOptions) => {
         throw new Error('type invalid');
     }
   };
+  let err = false;
+  const setError = (error) => {
+    err = error;
+  };
+  const haveError = () => err;
   return {
     check,
     producer: brokerProducer,
     consumer: brokerConsumer,
+    setError,
+    haveError,
   };
 };
 
+/**
+ * @typedef {Object} Broker
+ * @property {*} check
+ * @property {*} producer
+ * @property {import('./consumer').Consumer} consumer
+ * @property {*} setError
+ * @property {*} haveError
+ */
+
+/**
+ * @callback GetBroker
+ * @returns {Broker}
+ */
+
+/**
+ * @typedef {Object} PoolBroker
+ * @property {} addBroker
+ * @property {GetBroker} getBroker
+ * @property {*} map
+ */
+
+/**
+ * @returns {PoolBroker}
+ */
 const createPool = () => {
   const pool = {};
   const aliases = [];
   const addBroker = (alias, broker) => {
     pool[alias] = broker;
     aliases.push(alias);
-  };
+  };/**
+   * get broker instance by alias
+   * @param {String} alias
+   * @returns {Broker}
+   */
   const getBroker = (alias) => {
     const broker = pool[alias];
     if (!broker) {
@@ -102,10 +137,17 @@ const createPool = () => {
   };
   const map = (func) => aliases.map((alias) => func(pool[alias]));
 
+  let err = false;
+  const setError = (error) => {
+    err = error;
+  };
+  const haveError = () => err;
   return {
     addBroker,
     getBroker,
     map,
+    setError,
+    haveError,
   };
 };
 

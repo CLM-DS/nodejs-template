@@ -4,7 +4,6 @@ const createProducer = (brokerClient, brokerOptions) => {
     data: undefined,
     attrs: undefined,
   };
-  const messagePublisher = {};
 
   /**
    *
@@ -34,7 +33,6 @@ const createProducer = (brokerClient, brokerOptions) => {
      * @type {import("@google-cloud/pubsub").Topic}
      */
     const topicInstance = client.topic(record.topic);
-    messagePublisher[record.topic] = topicInstance;
     let dataStr = record.data;
     if (typeof dataStr === 'string') {
       dataStr = JSON.stringify(dataStr);
@@ -54,8 +52,7 @@ const createProducer = (brokerClient, brokerOptions) => {
     /**
      * @type {import("@azure/service-bus").ServiceBusSender}
      */
-    const queueInstance = messagePublisher[record.topic] || client.createSender(record.topic);
-    messagePublisher[record.topic] = queueInstance;
+    const queueInstance = client.createSender(record.topic);
     return queueInstance.sendMessages({
       body: record.data,
     });

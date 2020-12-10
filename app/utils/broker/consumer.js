@@ -1,3 +1,9 @@
+/**
+ * create consumer
+ * @param {*} brokerClient
+ * @param {*} brokerOptions
+ * @returns {Consumer}
+ */
 const createConsumer = (brokerClient, brokerOptions) => {
   /**
    * @callback messageReceived
@@ -120,6 +126,25 @@ const createConsumer = (brokerClient, brokerOptions) => {
     addListener,
   };
 };
+
+/**
+ * @typedef {Object} BrokerOptionSubscriber
+ * @property {String} topic
+ * @property {String} subscription
+ * @property {*} onMessage
+ * @property {*} onError
+ */
+
+/**
+ * @callback AddListener
+ * @param {BrokerOptionSubscriber} options
+ * @returns {Promise<Void>}
+ */
+
+/**
+ * @typedef {Object} Consumer
+ * @property {AddListener} addListener
+ */
 
 module.exports = {
   createConsumer,
