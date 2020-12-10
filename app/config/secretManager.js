@@ -11,13 +11,17 @@ const loadSecrets = async (options = { version: 'latest', env: 'dev', project: '
     const [version] = await client.accessSecretVersion({
       name: `${name}/versions/${options.version}`,
     });
-    if (name.endsWith(options.env)) {
-      const key = name.substring(0, name.length - options.env.length);
+    let env = options.env.toUpperCase();
+    if (env.startsWith('_')) {
+      env = `_${env}`;
+    }
+    if (name.endsWith(env)) {
+      const key = name.substring(0, name.length - (env.length + 1)).toUpperCase();
       secrets[key] = version.payload;
     }
   });
   return {
-    get: (name) => secrets[name],
+    get: (name) => secrets[name.toUpperCase()],
   };
 };
 
