@@ -16,7 +16,7 @@ const loadSecrets = async (options = { version: 'latest', env: 'dev', project: '
       env = `_${env}`;
     }
     if (name.endsWith(env)) {
-      const key = name.substring(0, name.length - (env.length + 1)).toUpperCase();
+      const key = name.substring(0, name.length - env.length).toUpperCase();
       secrets[key] = version.payload;
     }
   });
