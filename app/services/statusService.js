@@ -6,7 +6,7 @@ const { httpStatus, serverStatus } = require('../constants');
  * @returns {('UP' | undefined)}
  */
 const checkCtx = (ctx) => {
-  if (ctx.log && ctx.db && ctx.pool) {
+  if (ctx.log && ctx.db && (!ctx.config.brokerConfig || ctx.pool)) {
     return serverStatus.UP;
   }
   return undefined;
@@ -37,7 +37,7 @@ const healthy = (ctx) => {
  */
 const alive = (ctx) => {
   const { db, pool } = ctx;
-  if (db && db.isConnected() && !pool.haveError()) {
+  if (db && db.isConnected() && (!ctx.config.brokerConfig || !pool.haveError())) {
     ctx.body = { status: 'UP' };
     ctx.status = httpStatus.statusCodes.OK;
   } else {

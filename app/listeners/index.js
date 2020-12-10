@@ -7,7 +7,7 @@ const { createBroker, createPool } = require('../utils/broker');
 const buildListener = async (pool) => {
   const broker = pool.getBroker('kafka');
   const listenerConfig = {
-    topic: 'topid-dummy',
+    topic: 'topic-dummy',
     onMessage: (message) => {
       console.log(message);
     },
@@ -32,7 +32,7 @@ const createBrokers = (options) => {
  */
 const useListeners = (args = {}) => {
   const { options, logger } = args;
-  if (options && options.brokerConfig) {
+  if (options && options.brokerConfig && Object.keys(options.brokerConfig).length > 0) {
     const pool = createBrokers(args.options);
     buildListener(pool).then().catch((err) => {
       logger.error(err);
