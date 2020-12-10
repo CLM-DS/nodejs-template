@@ -7,7 +7,7 @@ const run = async () => {
   const secrets = await loadSecrets({
     env: process.env.NODE_ENV || 'development',
     project: process.env.PROJECT,
-    version: 'latest',
+    version: process.env.VERSION || 'latest',
   });
   const config = loadConfig(secrets);
   startServer(config);
