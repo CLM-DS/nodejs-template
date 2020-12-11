@@ -12,7 +12,7 @@ const loadSecrets = async (options = { version: 'latest', env: 'dev', project: '
       name: `${name}/versions/${options.version}`,
     });
     let env = options.env.toUpperCase();
-    if (env.startsWith('_')) {
+    if (!env.startsWith('_')) {
       env = `_${env}`;
     }
     if (name.endsWith(env)) {

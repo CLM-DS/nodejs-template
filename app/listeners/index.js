@@ -27,7 +27,6 @@ const createBrokers = (options) => {
 /**
  * Configure all middleware to application
  * @param {*} args
- * @param {*} onComplete
  * @returns {*}
  */
 const useListeners = (args = {}) => {
