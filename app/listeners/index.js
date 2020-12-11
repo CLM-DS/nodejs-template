@@ -6,6 +6,7 @@ const { createBroker, createPool } = require('../utils/broker');
  */
 const buildListener = async (pool) => {
   const broker = pool.getBroker('kafka');
+
   const listenerConfig = {
     topic: 'topic-dummy',
     onMessage: (message) => {
@@ -15,11 +16,13 @@ const buildListener = async (pool) => {
       console.log(err);
     },
   };
+  // example from broker listener event
   await broker.consumer.addListener(listenerConfig);
 };
 
 const createBrokers = (options) => {
   const pool = createPool();
+  // example from broker created
   pool.addBroker('kafka', createBroker(options.brokerConfig.kafka));
   return pool;
 };
