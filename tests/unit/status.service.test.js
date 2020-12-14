@@ -11,6 +11,8 @@ describe('Test Cases: StatusService', () => {
     const ctx = {
       log: {},
       db: {},
+      pool: {},
+      config: {},
     };
     const res = statusService.healthy(ctx);
     expect(res.status).toEqual(statusCodes.OK);
@@ -33,6 +35,10 @@ describe('Test Cases: StatusService', () => {
       db: {
         isConnected: () => true,
       },
+      pool: {
+        haveError: () => false,
+      },
+      config: {},
     };
     const res = statusService.alive(ctx);
     expect(res.status).toEqual(statusCodes.OK);
