@@ -140,7 +140,7 @@ Example
   }),
 ```
 
-For more information about kafka configuration, [textvisit this link](https://kafka.js.org/docs/configuration)
+For more information about kafka configuration, [visit this link](https://kafka.js.org/docs/configuration)
 
 To access the settings you must take the context and access the **config** key
 
