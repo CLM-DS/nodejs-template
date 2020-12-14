@@ -1,12 +1,15 @@
 jest.mock('koa');
 jest.mock('dotenv');
-const { startServer } = require('../../app/server');
+const { startServer, stopServer } = require('../../app/server');
+const { loadConfig } = require('../../app/config');
 
 describe('Test Case Server', () => {
   it('Server Start init', () => {
-    // eslint-disable-next-line global-require
-    const config = require('../../app/config');
+    const config = loadConfig({ get: () => undefined });
     const app = startServer(config);
     expect(app).not.toEqual(undefined);
+    const spy = jest.spyOn(app, 'removeAllListeners');
+    stopServer();
+    expect(spy).toHaveBeenCalled();
   });
 });
