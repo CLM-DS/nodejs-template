@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const logger = require('./logger');
+const { createLogger } = require('./logger');
 /**
  * Client from Mongo Connection
  * @type {MongoClient}
@@ -17,6 +17,7 @@ let dataSource = '';
  * @returns {MongoClient}
  */
 const connect = (options) => {
+  const logger = createLogger(options.log);
   const { mongoUri } = options;
   if (client) {
     return client;

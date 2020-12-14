@@ -20,6 +20,7 @@ const useRoute = (app, router, options) => {
 const useRoutes = (args = {}) => {
   const { app, options } = args;
   useRoute(app, statusRoute, options);
+  args.log.info('Routes Loaded');
   return app;
 };
 
