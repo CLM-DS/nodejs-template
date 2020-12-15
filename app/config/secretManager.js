@@ -1,5 +1,10 @@
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
+/**
+ * Load Secret and return object to values access
+ * @param {*} options params to search data in GCP
+ * @param {'online'|'offline'} mode online: used secret manager GCP, offline: enviroment vaiables
+ */
 const loadSecrets = async (
   options = { version: 'latest', env: 'dev', project: '' },
   mode = 'online',
