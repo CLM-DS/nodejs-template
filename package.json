@@ -1,0 +1,35 @@
+{
+  "name": "rest-boilerplate",
+  "version": "1.0.0",
+  "description": "Template to build rest api",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "jest --collectCoverage --detectOpenHandles --runInBand --forceExit",
+    "start": "node app",
+    "dev": "yarn start --quiet | pino-pretty -c -l -t",
+    "lint": "eslint app tests"
+  },
+  "author": "Yanny Hernández <yhernandez@clmconsultores.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "jest": "^26.6.0",
+    "jest-extended": "^0.11.5",
+    "pino-pretty": "^4.3.0"
+  },
+  "dependencies": {
+    "@azure/service-bus": "^7.0.0",
+    "@google-cloud/pubsub": "^2.7.0",
+    "@google-cloud/secret-manager": "^3.2.3",
+    "dotenv": "^8.2.0",
+    "joi": "^17.2.1",
+    "kafkajs": "^1.15.0",
+    "koa": "^2.13.0",
+    "koa-router": "^9.4.0",
+    "mongodb": "^3.6.2",
+    "pino": "^6.7.0"
+  }
+}
