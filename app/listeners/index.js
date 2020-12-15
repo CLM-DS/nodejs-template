@@ -1,4 +1,5 @@
 const { createBroker, createPool } = require('../utils/broker');
+const { createListener } = require('./dummyListener');
 /**
  * Injects in each message the information of connection to database and configurations,
  * in the context key
@@ -9,27 +10,6 @@ const createContextMessage = (args, onMessage) => (msg) => {
   const msgMutable = msg;
   msgMutable.context = args;
   onMessage(msgMutable);
-};
-
-/**
- *
- * @param {import('../utils/broker').PoolBroker} pool
- */
-const buildListener = async (pool, args) => {
-  const broker = pool.getBroker('kafka');
-
-  // this is code from example
-  const listenerConfig = {
-    topic: 'topic-dummy',
-    onMessage: createContextMessage(args, (message) => {
-      args.log.info(message);
-    }),
-    onError: createContextMessage(args, (err) => {
-      args.log.error(err);
-    }),
-  };
-  // example from broker listener event
-  await broker.consumer.addListener(listenerConfig);
 };
 
 const createBrokers = (args) => {
@@ -55,7 +35,7 @@ const useListeners = (args = {}) => {
     && Object.keys(options.brokerConfig).length > 0
   ) {
     const pool = createBrokers(args);
-    buildListener(pool)
+    createListener(pool)
       .then()
       .catch((err) => {
         log.error(err);
