@@ -1,3 +1,9 @@
+/**
+ * create producer from event
+ * @param {*} brokerClient
+ * @param {*} brokerOptions
+ * @returns {Producer}
+ */
 const createProducer = (brokerClient, brokerOptions) => {
   const defaultRecord = {
     topic: '',
@@ -89,6 +95,19 @@ const createProducer = (brokerClient, brokerOptions) => {
     publish: publishMessage,
   };
 };
+
+/**
+ * @callback Publish
+ * @param {String} topic
+ * @param {*} message
+ * @param {*} [args]
+ * @returns {Promise<(String|import('kafkajs').RecordMetadata[]|void)>}
+ */
+
+/**
+ * @typedef {Object} Producer
+ * @property {Publish} publish
+ */
 module.exports = {
   createProducer,
 };
