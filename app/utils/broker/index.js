@@ -96,7 +96,7 @@ const createBroker = (brokerOptions) => {
 /**
  * @typedef {Object} Broker
  * @property {*} check
- * @property {*} producer
+ * @property {import('./producer').Producer} producer
  * @property {import('./consumer').Consumer} consumer
  * @property {*} setError
  * @property {*} haveError
@@ -104,6 +104,7 @@ const createBroker = (brokerOptions) => {
 
 /**
  * @callback GetBroker
+ * @param {String} alias
  * @returns {Broker}
  */
 
