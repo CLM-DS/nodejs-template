@@ -9,6 +9,7 @@
     "dev": "node app --quiet | pino-pretty -c -l -t",
     "lint": "eslint app tests"
   },
+  "pre-commit": ["lint"],
   "author": "Yanny Hernández <yhernandez@clmconsultores.com>",
   "license": "MIT",
   "devDependencies": {
