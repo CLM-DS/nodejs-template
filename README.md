@@ -168,3 +168,23 @@ Example
     );
 ```
 
+
+To overload the error output we must use the option **transform**
+
+
+Example
+
+``` js
+    router.get('/status/healthy',
+        useValidation([{
+            property: 'body',
+            scheme,
+        }, {
+            property: 'header',
+            schemeHeader,
+
+        }], handlerFuntion, {
+            transform: (err) => err
+        })
+    );
+```
