@@ -86,4 +86,58 @@ describe('Test Cases: Broker utils', () => {
     const idQueue = await brokerServiceBus.producer.publish('', {});
     expect(idQueue).toEqual('id');
   });
+  it('Test Case Create Broker Kafka, consumer', async () => {
+    const pool = createPool();
+    expect(pool).toBeDefined();
+    const consumerKafkaMock = jest.fn();
+    const consumerObj = {
+      connect: jest.fn(() => Promise.resolve()),
+      subscribe: jest.fn(() => {}),
+      run: jest.fn(() => Promise.resolve()),
+    };
+    consumerKafkaMock.mockReturnValueOnce(consumerObj);
+    kafkajs.Kafka.mockImplementationOnce(() => ({
+      consumer: consumerKafkaMock,
+    }));
+    const broker = createBroker({ type: 'kafka', kafkaOption: {} });
+    const spy = jest.spyOn(consumerObj, 'connect');
+    await broker.consumer.addListener({
+      topic: '',
+      onMessage: {},
+      onError: {},
+    });
+    expect(spy).toHaveBeenCalled();
+    const objectSusbscription = {
+      addListener: jest.fn(() => 'id'),
+    };
+    pubsub.PubSub.mockImplementationOnce(() => ({
+      subscription: jest.fn(() => objectSusbscription),
+    }));
+    const spyPub = jest.spyOn(objectSusbscription, 'addListener');
+    const brokerPubSub = createBroker({ type: 'pubsub' });
+    await brokerPubSub.consumer.addListener({
+      topic: '',
+      onMessage: {},
+      onError: {},
+    });
+    expect(spyPub).toHaveBeenCalled();
+
+    const objectSubscribe = {
+      subscribe: jest.fn(() => 'id'),
+    };
+    servicebus.ServiceBusClient.mockImplementationOnce(() => ({
+      createReceiver: jest.fn(() => objectSubscribe),
+    }));
+    const spySer = jest.spyOn(objectSubscribe, 'subscribe');
+    const brokerServiceBus = createBroker({
+      type: 'servicebus',
+      serviceBusStrCnn: '',
+    });
+    await brokerServiceBus.consumer.addListener({
+      topic: '',
+      onMessage: {},
+      onError: {},
+    });
+    expect(spySer).toHaveBeenCalled();
+  });
 });
