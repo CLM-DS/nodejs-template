@@ -35,6 +35,10 @@ const createBroker = (brokerOptions) => {
   const createPubSub = () => new PubSub();
 
   const createServiceBus = (strConn) => new ServiceBusClient(strConn);
+  /**
+   * @type {boolean|String}
+   */
+  let err = false;
 
   /**
    * create publisher instance to create message
@@ -54,6 +58,7 @@ const createBroker = (brokerOptions) => {
         break;
       default:
         brokerClient = null;
+        err = 'Broker Type not Defined';
         break;
     }
   };
@@ -61,25 +66,26 @@ const createBroker = (brokerOptions) => {
   initBroker();
   const brokerProducer = createProducer(brokerClient, brokerOptions);
   const brokerConsumer = createConsumer(brokerClient, brokerOptions);
+  let producerKafka;
   const check = async () => {
     switch (brokerOptions.type) {
       case 'kafka':
-        await brokerClient.producer().connect();
-        await brokerClient.producer().disconnect();
-        break;
+        producerKafka = brokerClient.producer();
+        await producerKafka.connect();
+        await producerKafka.disconnect();
+        return true;
       case 'pubsub':
         await brokerClient.auth.getAccessToken();
-        break;
+        return true;
       case 'servicebus':
-        break;
+        return true;
       default:
-        if (brokerClient) {
+        if (!brokerClient) {
           throw new Error('Broker client not found');
         }
         throw new Error('type invalid');
     }
   };
-  let err = false;
   const setError = (error) => {
     err = error;
   };

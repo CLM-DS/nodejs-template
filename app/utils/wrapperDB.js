@@ -19,6 +19,10 @@ let dataSource = '';
 const connect = (options) => {
   const logger = createLogger(options.log);
   const { mongoUri } = options;
+  if (!mongoUri) {
+    logger.info('no DB URI Detected, skipping connection!');
+    return undefined;
+  }
   if (client) {
     return client;
   }

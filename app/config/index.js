@@ -13,15 +13,5 @@ module.exports = {
     port: process.env.PORT || 3000,
     mongoUri: secrets.get('MONGO_DB_URL') || '',
     dataSource: secrets.get('DATABASE_NAME') || '',
-    brokerConfig: {
-      kafka: {
-        brokers: ['localhost:9092'],
-        ssl: true,
-        credentials: {
-          username: 'test',
-          password: 'testest',
-        },
-      },
-    },
   }),
 };

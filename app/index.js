@@ -8,7 +8,7 @@ const run = async () => {
     env: process.env.NODE_ENV || 'development',
     project: process.env.PROJECT,
     version: process.env.VERSION || 'latest',
-  });
+  }, process.env.MODE || 'offline');
   const config = loadConfig(secrets);
   startServer(config);
 };
