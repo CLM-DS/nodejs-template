@@ -24,6 +24,9 @@ describe('Test Cases: StatusService', () => {
       db: {
         isConnected: () => false,
       },
+      config: {
+        mongoUri: 'localhost',
+      },
     };
     const res = statusService.alive(ctx);
     expect(res.status).toEqual(statusCodes.SERVICE_UNAVAILABLE);
