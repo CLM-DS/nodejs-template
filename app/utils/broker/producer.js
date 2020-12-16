@@ -40,7 +40,7 @@ const createProducer = (brokerClient, brokerOptions) => {
      */
     const topicInstance = client.topic(record.topic);
     let dataStr = record.data;
-    if (typeof dataStr === 'string') {
+    if (typeof dataStr !== 'string') {
       dataStr = JSON.stringify(dataStr);
     }
     return topicInstance.publish(Buffer.from(dataStr, 'utf-8'), record.attrs);
@@ -80,10 +80,10 @@ const createProducer = (brokerClient, brokerOptions) => {
       case 'pubsub':
         return publishMessagePubSub(brokerClient, {
           ...args,
-          message,
+          ...message,
         });
       case 'servicebus':
-        return publishMessageServiceBus(brokerClient, { message });
+        return publishMessageServiceBus(brokerClient, message);
       default:
         if (brokerClient) {
           throw new Error('Broker client not found');
