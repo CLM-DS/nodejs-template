@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 /**
  * A config
  * @typedef {Object} Config
@@ -9,12 +7,21 @@ require('dotenv').config();
  * @property {string} dataSource - Name Database to select
  */
 
-/**
- * @type {Config}
- */
 module.exports = {
-  prefix: process.env.APP_PREFIX || '',
-  port: process.env.PORT || 3000,
-  mongoUri: process.env.MONGO_URI || '',
-  dataSource: process.env.DATABASE_NAME,
+  loadConfig: (secrets) => ({
+    prefix: process.env.APP_PREFIX || '',
+    port: process.env.PORT || 3000,
+    mongoUri: secrets.get('MONGO_DB_URL') || '',
+    dataSource: secrets.get('DATABASE_NAME') || '',
+    brokerConfig: {
+      kafka: {
+        brokers: ['localhost:9092'],
+        ssl: true,
+        credentials: {
+          username: 'test',
+          password: 'testest',
+        },
+      },
+    },
+  }),
 };

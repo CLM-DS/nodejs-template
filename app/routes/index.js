@@ -1,4 +1,4 @@
-const statusRoute = require('./statusRoute');
+const { createRouterStatus } = require('./statusRoute');
 
 /**
  * create route in server koa
@@ -19,7 +19,8 @@ const useRoute = (app, router, options) => {
  */
 const useRoutes = (args = {}) => {
   const { app, options } = args;
-  useRoute(app, statusRoute, options);
+  useRoute(app, createRouterStatus(), options);
+  args.log.info('Routes Loaded');
   return app;
 };
 

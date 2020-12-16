@@ -21,8 +21,12 @@
     "pino-pretty": "^4.3.0"
   },
   "dependencies": {
+    "@azure/service-bus": "^7.0.0",
+    "@google-cloud/pubsub": "^2.7.0",
+    "@google-cloud/secret-manager": "^3.2.3",
     "dotenv": "^8.2.0",
     "joi": "^17.2.1",
+    "kafkajs": "^1.15.0",
     "koa": "^2.13.0",
     "koa-router": "^9.4.0",
     "mongodb": "^3.6.2",

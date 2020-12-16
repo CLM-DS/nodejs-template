@@ -1,4 +1,16 @@
+require('dotenv').config();
 const { startServer } = require('./server');
-const config = require('./config');
+const { loadSecrets } = require('./config/secretManager');
+const { loadConfig } = require('./config');
 
-startServer(config);
+const run = async () => {
+  const secrets = await loadSecrets({
+    env: process.env.NODE_ENV || 'development',
+    project: process.env.PROJECT,
+    version: process.env.VERSION || 'latest',
+  });
+  const config = loadConfig(secrets);
+  startServer(config);
+};
+
+run();

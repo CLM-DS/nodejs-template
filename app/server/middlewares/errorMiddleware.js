@@ -1,13 +1,13 @@
 const { statusCodes } = require('../../constants/httpStatus');
-const logger = require('../../utils/logger');
-
+const { createLogger } = require('../../utils/logger');
 /**
  * Handler from error
  * @param {Error} err
  * @param {import('./index').ContextStd} ctx
  */
 const handlerError = (err, ctx) => {
-  logger.error({
+  const { log = createLogger() } = ctx;
+  log.error({
     req: ctx.request,
     err,
   });
