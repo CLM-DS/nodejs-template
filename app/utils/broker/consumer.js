@@ -20,7 +20,6 @@ const createConsumer = (brokerClient, brokerOptions) => {
    * @property {messageReceived} onMessage
    * @property {messageError} onError
    * @property {String} [topic]
-   * @property {String} [subscription] - suscription name to servicebus and pubsub
    */
 
   let brokerReceiver;
@@ -80,10 +79,9 @@ const createConsumer = (brokerClient, brokerOptions) => {
    * @param {ListenerOption} options
    */
   const createReceiverPubSub = (client, options) => {
-    const subscription = client.subscription(options.subscription);
+    const subscription = client.subscription(options.topic);
     subscription.addListener('message', options.onMessage);
     subscription.addListener('error', options.onError);
-    messageProcessor[options.subscription] = subscription;
   };
 
   /**
@@ -92,12 +90,11 @@ const createConsumer = (brokerClient, brokerOptions) => {
    * @param {ListenerOption} options
    */
   const createReceiverServiceBus = async (client, options) => {
-    const receiver = client.createReceiver(options.subscription);
+    const receiver = client.createReceiver(options.topic);
     receiver.subscribe({
       processMessage: options.onMessage,
       processError: options.onError,
     });
-    messageProcessor[options.subscription] = receiver;
   };
 
   /**
