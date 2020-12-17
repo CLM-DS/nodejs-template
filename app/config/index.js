@@ -13,5 +13,6 @@ module.exports = {
     port: process.env.PORT || 3000,
     mongoUri: secrets.get('MONGO_DB_URL') || '',
     dataSource: secrets.get('DATABASE_NAME') || '',
+    collection: process.env.COLLECTION || '',
   }),
 };

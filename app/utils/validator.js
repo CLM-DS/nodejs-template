@@ -35,7 +35,7 @@ const evaluateSchemes = (schemas, ctx) => {
     const data = getProperty(property, ctx);
     if (!data) {
       return {
-        message: 'Data not found',
+        message: 'Invalid Request',
       };
     }
     const { error } = scheme.validate(data);

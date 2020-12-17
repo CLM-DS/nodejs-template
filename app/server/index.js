@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const { connect } = require('../utils/wrapperDB');
+const db = require('../utils/wrapperDB');
 const { useRoutes } = require('../routes');
 const { useMiddleware } = require('./middlewares');
 const { createLogger } = require('../utils/logger');
@@ -20,11 +20,11 @@ const startServer = (options = {}) => {
   logger.info('Server Initialize');
   app = new Koa();
   // create connection to database
-  const connection = connect(options);
+  const connection = db.connect(options);
   // create connection to broker and listener message
   const pool = useListeners({
     options,
-    db: connection,
+    db,
     log: logger,
   });
   // load middleware to app
@@ -32,7 +32,7 @@ const startServer = (options = {}) => {
     options,
     app,
     pool,
-    db: connection,
+    db,
   });
   logger.info('Server Middleware Loaded');
   // load routes to app

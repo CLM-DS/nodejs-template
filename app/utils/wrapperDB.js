@@ -106,6 +106,8 @@ const updateBatch = (collection, filter, dataUpdate) => {
   return database.collection(collection).updateMany(filter, dataUpdate);
 };
 
+const isConnected = () => client.isConnected();
+
 module.exports = {
   create,
   createBatch,
@@ -116,4 +118,5 @@ module.exports = {
   connect,
   client,
   dataSource,
+  isConnected,
 };

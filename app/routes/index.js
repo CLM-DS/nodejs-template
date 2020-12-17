@@ -1,3 +1,4 @@
+const { createRouterCota } = require('./cotaRoute');
 const { createRouterStatus } = require('./statusRoute');
 
 /**
@@ -20,6 +21,7 @@ const useRoute = (app, router, options) => {
 const useRoutes = (args = {}) => {
   const { app, options } = args;
   useRoute(app, createRouterStatus(), options);
+  useRoute(app, createRouterCota(), options);
   args.log.info('Routes Loaded');
   return app;
 };

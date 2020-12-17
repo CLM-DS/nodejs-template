@@ -1,7 +1,7 @@
 {
-  "name": "rest-boilerplate",
+  "name": "cota-batch",
   "version": "1.0.0",
-  "description": "Template to build rest api",
+  "description": "Cota Batch for POST and PUT HTTP Requests",
   "main": "app/index.js",
   "scripts": {
     "test": "jest --collectCoverage --detectOpenHandles --runInBand --forceExit",
@@ -9,7 +9,7 @@
     "dev": "node app --quiet | pino-pretty -c -l -t",
     "lint": "eslint app tests"
   },
-  "author": "Yanny Hernández <yhernandez@clmconsultores.com>",
+  "author": "Jonathan Torres Salvo <ext_jtorress@clmconsultores.com>",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^7.11.0",
@@ -28,6 +28,7 @@
     "joi": "^17.2.1",
     "kafkajs": "^1.15.0",
     "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
     "mongodb": "^3.6.2",
     "pino": "^6.7.0"
