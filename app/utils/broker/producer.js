@@ -79,6 +79,7 @@ const createProducer = (brokerClient, brokerOptions) => {
         });
       case 'pubsub':
         return publishMessagePubSub(brokerClient, {
+          topic,
           ...args,
           ...message,
         });
