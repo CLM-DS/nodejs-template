@@ -1,3 +1,4 @@
+const bodyParse = require('koa-bodyparser');
 const configMiddleware = require('./configMiddleware');
 const errorMiddleware = require('./errorMiddleware');
 const loggerMiddleware = require('./loggerMiddleware');
@@ -37,6 +38,7 @@ const useMiddleware = (args = {}) => {
     pool,
     db,
   } = args;
+  app.use(bodyParse());
   // errorMiddleware must not move, this must be the first middleware to be used
   app.use(errorMiddleware(app));
   app.use(configMiddleware(options));

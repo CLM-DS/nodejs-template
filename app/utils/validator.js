@@ -3,7 +3,7 @@ const { statusCodes } = require('../constants/httpStatus');
 /**
  * @typedef {Object} SchemeValidation
  * @property {string} property
- * @property {Object} scheme
+ * @property {import('joi').ObjectSchema} scheme
  */
 
 /**
@@ -23,7 +23,7 @@ const getProperty = (property, ctx) => {
 
 /**
  * Evaluate Schemas
- * @param {[SchemeValidation]} schemas
+ * @param {SchemeValidation[]} schemas
  * @param {Context} ctx
  */
 const evaluateSchemes = (schemas, ctx) => {
@@ -48,15 +48,31 @@ const evaluateSchemes = (schemas, ctx) => {
 };
 
 /**
+ * @callback TransformCallback
+ * @param {*} error
+ * @returns {*}
+ */
+
+/**
+ * @typedef {Object} ValidationOption
+ * @property {TransformCallback} transform option to transform error
+ */
+
+/**
  *
  * @param {[SchemeValidation]} schemas
  * @param {*} handler
+ * @param {ValidationOption} options
  * @returns {(ctx: Context) => Context}
  */
-const useValidation = (schemas, handler) => (ctx) => {
-  const err = evaluateSchemes(schemas, ctx);
+const useValidation = (schemas, handler, options = {}) => (ctx) => {
+  let err = evaluateSchemes(schemas, ctx);
   if (!err) {
     return handler(ctx);
+  }
+  const { transform } = options || {};
+  if (transform) {
+    err = transform(err);
   }
   ctx.status = statusCodes.BAD_REQUEST;
   ctx.body = err;

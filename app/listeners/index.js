@@ -15,10 +15,10 @@ const createContextMessage = (args, onMessage) => (msg) => {
 const createBrokers = (args) => {
   const { options } = args;
   const pool = createPool();
-  // example from broker created
-  // this is code from example
-  pool.addBroker('kafka-1', createBroker(options.brokerConfig.kafka1));
-  pool.addBroker('kafka-2', createBroker(options.brokerConfig.kafka2));
+  const entries = Object.entries(options.brokerConfig);
+  entries.forEach((entry) => {
+    pool.addBroker(entry[0], createBroker(entry[1]));
+  });
   return pool;
 };
 
