@@ -7,18 +7,21 @@ const { statusCodes } = require('../constants/httpStatus');
  */
 
 /**
-  *
-  * @typedef {import('../server/middlewares').ContextStd} Context
-  */
+ *
+ * @typedef {import('../server/middlewares').ContextStd} Context
+ */
 
 /**
-  * Get property access
-  * @param {string} property
-  * @param {Context} ctx
-  */
+ * Get property access
+ * @param {string} property
+ * @param {Context} ctx
+ */
 const getProperty = (property, ctx) => {
   const properties = property.split('.');
-  return properties.reduce((acc, prop) => (acc ? acc[prop] : ctx[prop]), undefined);
+  return properties.reduce(
+    (acc, prop) => (acc ? acc[prop] : ctx[prop]),
+    undefined,
+  );
 };
 
 /**
@@ -28,9 +31,6 @@ const getProperty = (property, ctx) => {
  */
 const evaluateSchemes = (schemas, ctx) => {
   const err = schemas.reduce((acc, item) => {
-    if (acc) {
-      return acc;
-    }
     const { property, scheme } = item;
     const data = getProperty(property, ctx);
     if (!data) {
@@ -40,9 +40,9 @@ const evaluateSchemes = (schemas, ctx) => {
     }
     const { error } = scheme.validate(data);
     if (error) {
-      return error;
+      return { ...(acc || {}), [property]: error };
     }
-    return undefined;
+    return acc;
   }, undefined);
   return err;
 };
