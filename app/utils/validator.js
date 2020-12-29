@@ -28,19 +28,25 @@ const getProperty = (property, ctx) => {
  * Evaluate Schemas
  * @param {SchemeValidation[]} schemas
  * @param {Context} ctx
+ * @param {boolean} abort
  */
-const evaluateSchemes = (schemas, ctx) => {
+const evaluateSchemes = (schemas, ctx, abort = true) => {
   const err = schemas.reduce((acc, item) => {
+    if (acc && abort) {
+      return acc;
+    }
     const { property, scheme } = item;
     const data = getProperty(property, ctx);
     if (!data) {
-      return {
+      const e = {
+        property,
         message: 'Data not found',
       };
+      return abort ? e : { ...(acc || {}), [property]: e };
     }
     const { error } = scheme.validate(data);
     if (error) {
-      return { ...(acc || {}), [property]: error };
+      return abort ? error : { ...(acc || {}), [property]: error };
     }
     return acc;
   }, undefined);
@@ -66,7 +72,8 @@ const evaluateSchemes = (schemas, ctx) => {
  * @returns {(ctx: Context) => Context}
  */
 const useValidation = (schemas, handler, options = {}) => (ctx) => {
-  let err = evaluateSchemes(schemas, ctx);
+  const { abort = true } = options;
+  let err = evaluateSchemes(schemas, ctx, abort);
   if (!err) {
     return handler(ctx);
   }
