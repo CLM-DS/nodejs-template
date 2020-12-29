@@ -56,12 +56,14 @@ const evaluateSchemes = (schemas, ctx, abort = true) => {
 /**
  * @callback TransformCallback
  * @param {*} error
+ * @param {ContextStd} ctx
  * @returns {*}
  */
 
 /**
  * @typedef {Object} ValidationOption
  * @property {TransformCallback} transform option to transform error
+ * @property {boolean} abort stop in first error check
  */
 
 /**
@@ -79,7 +81,7 @@ const useValidation = (schemas, handler, options = {}) => (ctx) => {
   }
   const { transform } = options || {};
   if (transform) {
-    err = transform(err);
+    err = transform(err, ctx);
   }
   ctx.status = statusCodes.BAD_REQUEST;
   ctx.body = err;
