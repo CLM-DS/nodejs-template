@@ -7,42 +7,48 @@ const { statusCodes } = require('../constants/httpStatus');
  */
 
 /**
-  *
-  * @typedef {import('../server/middlewares').ContextStd} Context
-  */
+ *
+ * @typedef {import('../server/middlewares').ContextStd} Context
+ */
 
 /**
-  * Get property access
-  * @param {string} property
-  * @param {Context} ctx
-  */
+ * Get property access
+ * @param {string} property
+ * @param {Context} ctx
+ */
 const getProperty = (property, ctx) => {
   const properties = property.split('.');
-  return properties.reduce((acc, prop) => (acc ? acc[prop] : ctx[prop]), undefined);
+  return properties.reduce(
+    (acc, prop) => (acc ? acc[prop] : ctx[prop]),
+    undefined,
+  );
 };
 
 /**
  * Evaluate Schemas
  * @param {SchemeValidation[]} schemas
  * @param {Context} ctx
+ * @param {boolean} abort
  */
-const evaluateSchemes = (schemas, ctx) => {
+const evaluateSchemes = (schemas, ctx, abort = true) => {
   const err = schemas.reduce((acc, item) => {
-    if (acc) {
+    if (acc && abort) {
       return acc;
     }
     const { property, scheme } = item;
     const data = getProperty(property, ctx);
     if (!data) {
-      return {
+      const e = {
+        property,
         message: 'Data not found',
       };
+      return abort ? e : { ...(acc || {}), [property]: e };
     }
     const { error } = scheme.validate(data);
     if (error) {
-      return error;
+      return abort ? error : { ...(acc || {}), [property]: error };
     }
-    return undefined;
+    return acc;
   }, undefined);
   return err;
 };
@@ -50,12 +56,14 @@ const evaluateSchemes = (schemas, ctx) => {
 /**
  * @callback TransformCallback
  * @param {*} error
+ * @param {ContextStd} ctx
  * @returns {*}
  */
 
 /**
  * @typedef {Object} ValidationOption
  * @property {TransformCallback} transform option to transform error
+ * @property {boolean} abort stop in first error check
  */
 
 /**
@@ -66,13 +74,14 @@ const evaluateSchemes = (schemas, ctx) => {
  * @returns {(ctx: Context) => Context}
  */
 const useValidation = (schemas, handler, options = {}) => (ctx) => {
-  let err = evaluateSchemes(schemas, ctx);
+  const { abort = true } = options;
+  let err = evaluateSchemes(schemas, ctx, abort);
   if (!err) {
     return handler(ctx);
   }
   const { transform } = options || {};
   if (transform) {
-    err = transform(err);
+    err = transform(err, ctx);
   }
   ctx.status = statusCodes.BAD_REQUEST;
   ctx.body = err;
