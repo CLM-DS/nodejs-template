@@ -81,6 +81,7 @@ const createProducer = (brokerClient, brokerOptions) => {
         return publishMessagePubSub(brokerClient, {
           ...args,
           ...message,
+          topic,
         });
       case 'servicebus':
         return publishMessageServiceBus(brokerClient, message);
