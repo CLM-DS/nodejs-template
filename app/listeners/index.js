@@ -1,16 +1,5 @@
 const { createBroker, createPool } = require('../utils/broker');
 const { createListener } = require('./dummyListener');
-/**
- * Injects in each message the information of connection to database and configurations,
- * in the context key
- * @param {*} args object with, db, log and config from app
- * @param {*} onMessage handler to processing event received
- */
-const createContextMessage = (args, onMessage) => (msg) => {
-  const msgMutable = msg;
-  msgMutable.context = args;
-  onMessage(msgMutable);
-};
 
 const createBrokers = (args) => {
   const { options } = args;
@@ -21,7 +10,6 @@ const createBrokers = (args) => {
   });
   return pool;
 };
-
 /**
  * Configure all middleware to application
  * @param {*} args
@@ -35,7 +23,7 @@ const useListeners = (args = {}) => {
     && Object.keys(options.brokerConfig).length > 0
   ) {
     const pool = createBrokers(args);
-    createListener(pool)
+    createListener(pool, args)
       .then()
       .catch((err) => {
         log.error(err);
@@ -48,5 +36,4 @@ const useListeners = (args = {}) => {
 
 module.exports = {
   useListeners,
-  createContextMessage,
 };

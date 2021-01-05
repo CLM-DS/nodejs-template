@@ -1,4 +1,4 @@
-const { createContextMessage } = require('./index');
+const { createContextMessage } = require('../utils/broker');
 /**
  *
  * @param {import('../utils/broker').PoolBroker} pool
