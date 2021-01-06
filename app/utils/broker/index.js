@@ -167,7 +167,7 @@ const createPool = () => {
 const createContextMessage = (args, onMessage) => (msg) => {
   const msgMutable = msg;
   msgMutable.context = args;
-  onMessage(msgMutable);
+  return onMessage(msgMutable);
 };
 
 module.exports = {

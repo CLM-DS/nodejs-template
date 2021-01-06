@@ -1,5 +1,4 @@
 const { createBroker, createPool } = require('../utils/broker');
-const { createListener } = require('./dummyListener');
 
 const createBrokers = (args) => {
   const { options } = args;
@@ -16,20 +15,13 @@ const createBrokers = (args) => {
  * @returns {*}
  */
 const useListeners = (args = {}) => {
-  const { options, log } = args;
+  const { options } = args;
   if (
     options
     && options.brokerConfig
     && Object.keys(options.brokerConfig).length > 0
   ) {
-    const pool = createBrokers(args);
-    createListener(pool, args)
-      .then()
-      .catch((err) => {
-        log.error(err);
-        pool.setError(err);
-      });
-    return pool;
+    return createBrokers(args);
   }
   return undefined;
 };
