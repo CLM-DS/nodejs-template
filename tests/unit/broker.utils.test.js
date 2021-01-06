@@ -4,7 +4,11 @@ jest.mock('@azure/service-bus');
 const kafkajs = require('kafkajs');
 const pubsub = require('@google-cloud/pubsub');
 const servicebus = require('@azure/service-bus');
-const { createPool, createBroker } = require('../../app/utils/broker');
+const {
+  createPool,
+  createBroker,
+  createContextMessage,
+} = require('../../app/utils/broker');
 
 describe('Test Cases: Broker utils', () => {
   it('Test Case Create Broker Kafka', () => {
@@ -51,9 +55,26 @@ describe('Test Cases: Broker utils', () => {
     const isCheckServiceBus = await brokerServiceBus.check();
     expect(isCheckServiceBus).toEqual(true);
   });
+  it('Test Case Create Broker Kafka, check fail', async () => {
+    const pool = createPool();
+    expect(pool).toBeDefined();
+    const broker = createBroker({ type: 'dummy', kafkaOption: {} });
+    expect(() => {
+      pool.getBroker('kafka');
+    }).toThrow();
+    return broker
+      .check()
+      .then(() => {
+        jest.fail('correct running');
+      })
+      .catch((err) => {
+        expect(err.message).toEqual('Broker client not found');
+      });
+  });
   it('Test Case Create Broker Kafka, publish', async () => {
     const pool = createPool();
     expect(pool).toBeDefined();
+    pool.setError('err');
     const producerKafkaMock = jest.fn();
     producerKafkaMock.mockReturnValueOnce({
       connect: jest.fn(() => Promise.resolve()),
@@ -64,7 +85,9 @@ describe('Test Cases: Broker utils', () => {
       producer: producerKafkaMock,
     }));
     const broker = createBroker({ type: 'kafka', kafkaOption: {} });
-    const record = await broker.producer.publish('', {});
+    broker.setError('err');
+    pool.addBroker('kafka', broker);
+    const record = await pool.getBroker('kafka').producer.publish('', {});
     expect(record).not.toBeDefined();
     pubsub.PubSub.mockImplementationOnce(() => ({
       topic: jest.fn(() => ({
@@ -117,7 +140,7 @@ describe('Test Cases: Broker utils', () => {
     const brokerPubSub = createBroker({ type: 'pubsub' });
     await brokerPubSub.consumer.addListener({
       topic: '',
-      onMessage: {},
+      onMessage: createContextMessage({}, () => undefined),
       onError: {},
     });
     expect(spyPub).toHaveBeenCalled();
@@ -139,5 +162,8 @@ describe('Test Cases: Broker utils', () => {
       onError: {},
     });
     expect(spySer).toHaveBeenCalled();
+    expect(createContextMessage({}, (msg) => msg)({ msg: 'msg' }).msg).toEqual(
+      'msg',
+    );
   });
 });

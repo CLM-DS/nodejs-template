@@ -188,3 +188,27 @@ Example
         })
     );
 ```
+
+
+### Example
+
+
+Example Publish Message 
+``` js
+    const broker = ctx.pool.getBroker('alias broker');
+    broker.producer.publish('topic or suscription', { data: { msg: 'dummy' } })
+```
+
+Example Listener Message 
+``` js
+    const broker = ctx.pool.getBroker('alias broker');
+    broker.consumer.addListener({
+    topic: 'topic-dummy',
+    onMessage: createContextMessage(args, (message) => {
+      message.context.log.info(message);
+    }),
+    onError: createContextMessage(args, (err) => {
+       message.context.log.error(err);
+    }),
+  })
+```
