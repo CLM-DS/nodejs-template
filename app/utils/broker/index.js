@@ -158,7 +158,20 @@ const createPool = () => {
   };
 };
 
+/**
+ * Injects in each message the information of connection to database and configurations,
+ * in the context key
+ * @param {*} args object with, db, log and config from app
+ * @param {*} onMessage handler to processing event received
+ */
+const createContextMessage = (args, onMessage) => (msg) => {
+  const msgMutable = msg;
+  msgMutable.context = args;
+  return onMessage(msgMutable);
+};
+
 module.exports = {
   createBroker,
   createPool,
+  createContextMessage,
 };
