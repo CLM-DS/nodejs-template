@@ -59,7 +59,7 @@ const createConsumer = (brokerClient, brokerOptions) => {
               }),
               {},
             ),
-            key: message.key.toString(),
+            key: (message.key || '').toString(),
             value: message.value.toString(),
           });
           try {
