@@ -68,9 +68,14 @@ const buildRequestLog = ({ request }) => buildLog({
  * @returns {(ctx: import('.').ContextStd, next: import('koa').Next) => import('koa')}
  */
 const monitorMiddleware = () => async (ctx, next) => {
-  ctx.log.info(buildRequestLog(ctx));
+  const isPathHealty = ctx.request.path.includes('/status');
+  if (!isPathHealty) {
+    ctx.log.info(buildRequestLog(ctx));
+  }
   await next();
-  ctx.log.info(buildResponseLog(ctx));
+  if (!isPathHealty) {
+    ctx.log.info(buildResponseLog(ctx));
+  }
   return ctx;
 };
 
