@@ -7,7 +7,9 @@ describe('Test Cases: MonitorMiddleware', () => {
       log: {
         info: jest.fn(),
       },
-      request: {},
+      request: {
+        path: '',
+      },
       response: {},
     };
     const spy = jest.spyOn(ctx.log, 'info');

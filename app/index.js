@@ -2,7 +2,7 @@ require('dotenv').config();
 const { startServer } = require('./server');
 const { loadSecrets } = require('./config/secretManager');
 const { loadConfig } = require('./config');
-​
+
 const run = async () => {
   // set secrets used in app
   const keySecrets = [];
@@ -15,5 +15,5 @@ const run = async () => {
   const config = loadConfig(secrets);
   startServer(config);
 };
-​
+
 run();
