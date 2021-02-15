@@ -5,7 +5,7 @@ const { loadConfig } = require('./config');
 
 const run = async () => {
   // set secrets used in app
-  const keySecrets = [];
+  const keysKnown = [];
   const secrets = await loadSecrets({
     env: process.env.APP_ENV || 'qa',
     project: process.env.PROJECT,
