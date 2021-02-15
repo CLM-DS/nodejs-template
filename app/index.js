@@ -10,7 +10,7 @@ const run = async () => {
     env: process.env.APP_ENV || 'qa',
     project: process.env.PROJECT,
     version: process.env.VERSION || 'latest',
-    keys: keySecrets,
+    keys: keysKnown,
   }, process.env.MODE || 'offline');
   const config = loadConfig(secrets);
   startServer(config);
