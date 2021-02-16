@@ -45,7 +45,13 @@ const loadSecrets = async (
     secrets = process.env;
   }
   return {
-    get: (name) => secrets[name.toUpperCase()],
+    get: (name) => {
+      const secret = secrets[name.toUpperCase()];
+      if (!secret) {
+        throw new Error(`${name} in secret variables not found`);
+      }
+      return secret;
+    },
   };
 };
 
