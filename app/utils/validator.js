@@ -25,6 +25,23 @@ const getProperty = (property, ctx) => {
 };
 
 /**
+ * Set property access
+ * @param {string} property
+ * @param {string} value
+ * @param {Context} ctx
+ */
+const setProperty = (property, value, ctx) => {
+  const properties = property.split('.');
+  let access = ctx;
+  for (let i = 0; i <= properties.length - 2; i += 1) {
+    const prop = properties[i];
+    access = access[prop];
+  }
+  const prop = properties[properties.length - 1];
+  access[prop] = value;
+};
+
+/**
  * Evaluate Schemas
  * @param {SchemeValidation[]} schemas
  * @param {Context} ctx
@@ -44,10 +61,11 @@ const evaluateSchemes = (schemas, ctx, abort = true) => {
       };
       return abort ? e : { ...(acc || {}), [property]: e };
     }
-    const { error } = scheme.validate(data);
+    const { error, value } = scheme.validate(data);
     if (error) {
       return abort ? error : { ...(acc || {}), [property]: error };
     }
+    setProperty(property, value, ctx);
     return acc;
   }, undefined);
   return err;
@@ -65,6 +83,25 @@ const evaluateSchemes = (schemas, ctx, abort = true) => {
  * @property {TransformCallback} transform option to transform error
  * @property {boolean} abort stop in first error check
  */
+
+/**
+ *
+ * @param {[SchemeValidation]} schemas
+ * @param {*} obj
+ * @param {ValidationOption} options
+ * @returns {(ctx: Context) => Context}
+ */
+const useValidationObject = (schemas, obj, options = {}) => {
+  const { abort = true } = options;
+  let err = evaluateSchemes(schemas, obj, abort);
+  if (err) {
+    if (options.transform) {
+      err = options.transform(err);
+    }
+    throw err;
+  }
+  return obj;
+};
 
 /**
  *
@@ -91,4 +128,5 @@ const useValidation = (schemas, handler, options = {}) => (ctx) => {
 
 module.exports = {
   useValidation,
+  useValidationObject,
 };
