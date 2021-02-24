@@ -1,3 +1,4 @@
+const xss = require('xss');
 const { statusCodes } = require('../constants/httpStatus');
 
 /**
@@ -121,7 +122,7 @@ const useValidation = (schemas, handler, options = {}) => (ctx) => {
     err = transform(err, ctx);
   }
   ctx.status = statusCodes.BAD_REQUEST;
-  ctx.body = err;
+  ctx.body = JSON.parse(xss(JSON.stringify(err)));
   ctx.log.warn(err, 'Validation fail');
   return ctx;
 };

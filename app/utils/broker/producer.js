@@ -1,3 +1,5 @@
+const xss = require('xss');
+
 /**
  * create producer from event
  * @param {*} brokerClient
@@ -60,7 +62,7 @@ const createProducer = (brokerClient, brokerOptions) => {
      */
     const queueInstance = client.createSender(record.topic);
     return queueInstance.sendMessages({
-      body: record.data,
+      body: JSON.parse(xss(JSON.stringify(record.data))),
     });
   };
 

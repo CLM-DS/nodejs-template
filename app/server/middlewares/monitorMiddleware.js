@@ -1,3 +1,5 @@
+const xss = require('xss');
+
 /**
  * @typedef {'response' | 'request'} TypeLog
  */
@@ -57,7 +59,7 @@ const buildResponseLog = ({ response }) => buildLog({
  * @returns {LogData<RequestLog>}
  */
 const buildRequestLog = ({ request }) => buildLog({
-  body: request.body,
+  body: JSON.parse(xss(JSON.stringify(request.body))),
   headers: request.headers,
   url: request.url,
   method: request.method,
