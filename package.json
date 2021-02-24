@@ -9,7 +9,9 @@
     "dev": "node app --quiet | pino-pretty -c -l -t",
     "lint": "eslint app tests"
   },
-  "pre-commit": ["lint"],
+  "pre-commit": [
+    "lint"
+  ],
   "author": "Yanny Hernández <yhernandez@clmconsultores.com>",
   "license": "MIT",
   "devDependencies": {
@@ -33,6 +35,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
     "mongodb": "^3.6.2",
-    "pino": "^6.7.0"
+    "pino": "^6.7.0",
+    "xss": "^1.0.8"
   }
 }

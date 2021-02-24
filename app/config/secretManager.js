@@ -1,5 +1,5 @@
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
-​
+
 /**
  * Load Secret and return object to values access
  * @param {*} options params to search data in GCP
@@ -18,7 +18,7 @@ const loadSecrets = async (
       parent: `projects/${options.project}`,
     });
     // eslint-disable-next-line no-plusplus
-    for (let index = 0; index < listSecrets.length; index++ ) {
+    for (let index = 0; index < listSecrets.length; index++) {
       const secret = listSecrets[index];
       const name = secret.name.toString();
       let env = options.env.toUpperCase();
@@ -49,7 +49,7 @@ const loadSecrets = async (
     get: (name) => secrets[name.toUpperCase()],
   };
 };
-​
+
 module.exports = {
   loadSecrets,
 };
