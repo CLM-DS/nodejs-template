@@ -32,7 +32,7 @@ const createBroker = (brokerOptions) => {
    */
   const createKafka = (options) => new Kafka(options);
 
-  const createPubSub = () => new PubSub();
+  const createPubSub = (options) => new PubSub(options);
 
   const createServiceBus = (strConn) => new ServiceBusClient(strConn);
   /**
@@ -54,7 +54,7 @@ const createBroker = (brokerOptions) => {
         brokerClient = createServiceBus(brokerOptions.serviceBusStrCnn);
         break;
       case 'pubsub':
-        brokerClient = createPubSub();
+        brokerClient = createPubSub(brokerOptions.config);
         break;
       default:
         brokerClient = null;
