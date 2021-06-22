@@ -9,6 +9,7 @@ describe('Test Cases: MonitorMiddleware', () => {
       },
       request: {
         path: '',
+        body: {},
       },
       response: {},
     };
