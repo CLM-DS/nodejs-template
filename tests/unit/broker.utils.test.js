@@ -106,7 +106,7 @@ describe('Test Cases: Broker utils', () => {
       type: 'servicebus',
       serviceBusStrCnn: '',
     });
-    const idQueue = await brokerServiceBus.producer.publish('', {});
+    const idQueue = await brokerServiceBus.producer.publish('', { data: 'dummy' });
     expect(idQueue).toEqual('id');
   });
   it('Test Case Create Broker Kafka, consumer', async () => {
