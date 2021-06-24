@@ -7,7 +7,9 @@
     "test": "jest --collectCoverage --detectOpenHandles --runInBand --forceExit",
     "start": "node app",
     "dev": "node app --quiet | pino-pretty -c -l -t",
-    "lint": "eslint app tests"
+    "lint": "eslint app tests",
+    "migrate:up": "cd app/config && migrate-mongo up",
+    "migrate:down": "cd app/config && migrate-mongo down"
   },
   "pre-commit": [
     "lint"
@@ -34,6 +36,7 @@
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^9.4.0",
+    "migrate-mongo": "^8.2.2",
     "mongodb": "^3.6.2",
     "pino": "^6.7.0",
     "xss": "^1.0.8"
